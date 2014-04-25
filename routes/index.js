@@ -38,7 +38,8 @@ module.exports = function (app) {
 	var fileext = req.params.file.split('.').pop();
 	if(fileext == 'jpg' || fileext == 'png' ){
 		var img = fs.readFileSync(path.dirname(require.main.filename) + "/uploads/fullsize/" + req.params.file);
-		res.writeHead(200, {'Content-Type': 'image' });
+		var type = 'image/' + fileext;
+		res.writeHead(200, {'Content-Type': type });
 		res.end(img, 'binary');
 	}else if(fileext == 'mp4'){
 		var filepath = path.dirname(require.main.filename) + "/uploads/fullsize/" + req.params.file;
@@ -64,6 +65,11 @@ module.exports = function (app) {
 		    fs.createReadStream(filepath).pipe(res);
 		 }
 		
+	}else if(fileext =='json' || fileext =='txt'){
+		var jsonfile = fs.readFileSync(path.dirname(require.main.filename) + "/uploads/fullsize/" + req.params.file);
+		res.writeHead(200, {'Content-Type': 'text' });
+		res.end(jsonfile, 'binary');
+			
 	}
 	
 
