@@ -1,0 +1,57 @@
+doctype html
+html
+	head
+		title= title
+		link(href='//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css' rel='stylesheet')
+		link(rel='stylesheet', href='/stylesheets/bootstrap.css')
+		link(rel='stylesheet', href='/stylesheets/style.css')
+		link(rel='stylesheet', href='/stylesheets/dashboard.css')
+	body
+		div(class='navbar navbar-fixed-top navbar-inverse',role='navigation')
+			div(class='container')
+				div(class='navbar-header')
+					button(type='button',class='navbar-toggle',data-toggle='collapse',data-target='.navbar-collapse')
+						span(class='sr-only') Toggle navigation
+						span(class='icon-bar')
+						span(class='icon-bar')
+						span(class='icon-bar')
+					a(class='navbar-brand', href='/') miniTwitter
+				div(class='navbar-collapse collapse')
+					ul(class='nav navbar-nav')		
+						if user
+							li
+								a(href='/u/'+user.name+/profile/)= user.name
+						if !user
+							li
+								a(href='/login') Log In
+							li
+								a(href='/reg') Register
+						else
+							li
+								a(href='/logout') Log out
+
+		div(id='container', class='container')
+			if success
+				div(class='alert alert-success')
+					p= success
+			if error
+				div(class='alert alert-danger')
+					p= error
+
+			block content
+			hr/
+			footer(class='footer')
+				div(class='container')
+					div(class='row')
+						div(class='col-md-2 col-md-offset-5')
+							p created by  Tao Lei
+							a(class="btn btn-social-icon btn-facebook",href='https://www.facebook.com/UPennTao',target= '_blank')
+								i(class="fa fa-facebook")
+							a(class="btn btn-social-icon btn-linkedin",href='https://www.linkedin.com/pub/tao-lei/41/1b8/984',target= '_blank')
+								i(class="fa fa-linkedin")
+							a(class="btn btn-social-icon btn-github",href='https://github.com/PennTao',target= '_blank')
+								i(class="fa fa-github")
+	script(src='/javascripts/jquery-2.1.0.js')
+	script(src='/javascripts/bootstrap.js')
+	script(src='/javascripts/global.js')
+	script(src='//platform.twitter.com/widgets.js', charset="utf-8")

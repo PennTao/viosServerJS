@@ -1,0 +1,15 @@
+extends layout
+
+block content
+	form(class='form-horizontal',method='post',role='form')
+			legend User Login
+			div(class='form-group')
+				div(class= 'col-xs-3')
+					label(for='username') Username
+					input(type='text', class='form-control',id='username',name='username')
+			div(class='form-group')
+				div(class= 'col-xs-3')
+					label(for='password') Password
+					input(type='password',class='form-control',id='password',name='password')
+			div(class='form-actions')
+				button(type='submit',class='btn btn-primary') Log in
