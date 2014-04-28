@@ -17,7 +17,7 @@ html
 						span(class='icon-bar')
 					a(class='navbar-brand', href='/') VIOS
 				div(class='navbar-collapse collapse')
-					ul(class='nav navbar-nav')		
+					ul(class='nav navbar-nav')
 						if user
 							li
 								a(href='/u/'+user.name+/profile/)= user.name

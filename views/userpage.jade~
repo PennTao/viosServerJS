@@ -1,4 +1,4 @@
 extends layout
 
 block content
-	p= username
+	p this is #{username}'s page

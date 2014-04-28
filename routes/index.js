@@ -13,6 +13,8 @@ module.exports = function (app) {
             title:'Main Page'
         })
     })
+
+
     app.get('/upload',function(req,res){
     	res.render('upload',{
     		title:'Upload'
@@ -43,6 +45,7 @@ module.exports = function (app) {
             }
         });
     });
+
     app.get('/uploads/fullsize/:file', function (req, res) {
 	var fileext = req.params.file.split('.').pop();
 	if(fileext == 'jpg' || fileext == 'png' ){
@@ -123,14 +126,38 @@ module.exports = function (app) {
                     req.flash('error', err);
                     return res.redirect('/reg');
                 }
-        
+                req.session.user = newUser;
                 console.log(req.session.user);
                 req.flash('success', 'Register success');
-                res.redirect('/reg');
+                res.redirect('/updateprofile');
             });
         });
     });
+    
+    app.get('/updateprofile',checkLogin);
+    app.get('/updateprofile',function(req,res){
+        res.render('profile',{
+            title: req.session.user.name,
+        })
+    })
 
+    app.get('/updateprofile',checkLogin);
+    app.post('/updateprofile',function(req,res){
+        var userinfo = new Object;
+        userinfo.gender = req.body.gender;
+        
+        userinfo.interest = req.body.interest;
+        
+        User.updateProfile(req.session.user.name,userinfo,function(err){
+            req.session.user = null;
+            res.redirect('/logout');
+        });
+
+
+
+
+
+    })
 	app.get('/login', checkNLogin);
     app.get('/login', function (req, res) {
         res.render('login', {
@@ -155,7 +182,7 @@ module.exports = function (app) {
             req.session.user = user;
             console.log(req.session.user);
             req.flash('success', 'Log in successfully');
-            res.redirect('/u/' + req.session.user.name + '/profile');
+            res.redirect('/u/' + req.session.user.name + '/userinfo');
         });
     });
 
@@ -166,10 +193,20 @@ module.exports = function (app) {
         res.redirect('/');
     });
 
-    app.get('/u/:user/profile',function(req,res){
-    	res.render('userpage', {
-            username: req.params.user
+    app.get('/u/:user/userinfo',function(req,res){
+        User.get(req.params.user,function(err,user){
+            if(!user){
+                req.flash('error', 'user does not exist');
+                return res.redirect('/');
+            }
+            console.log(user);
+            res.render('userpage', {
+                username: req.params.user,
+                gender: user.gender,
+                interest: user.interest 
+            })
         })
+
 
 
     })
@@ -183,7 +220,7 @@ module.exports = function (app) {
 	function checkNLogin(req, res, next) {
 	    if (req.session.user) {
 	        req.flash('error', 'logged in already');
-	        return res.redirect('/u/' + req.session.user.name + '/page/1');
+	        return res.redirect('/u/' + req.session.user.name + '/userinfo');
 	    }
 	    next();
 	};
