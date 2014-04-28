@@ -1,0 +1,49 @@
+extends layout
+
+block content
+	div(class='row')
+		div(class= 'col-md-offset-3 col-xs-12 col-sm-12 col-md-5 well well-sm')
+			legend Profile
+			form(action = '/updateprofile', method = 'post', role = 'form')
+				
+				div(class = 'form-group')
+					label Gender
+						div(class = 'row-fluid')
+						
+								label(class = 'radio-line')
+									input(type = 'radio', name = 'gender', id = 'radioMale', value = 'male')
+									| Male
+					
+								label(class = 'radio-line')
+									input(type = 'radio', name = 'gender', id = 'radioFemale', value = 'female')
+									| Female
+
+				div(class = 'form-group')
+					label Interest
+						div(class = 'row')
+							div(class = 'col-xs-4 col-md-4')
+								label
+									input(type = 'checkbox',name = 'interest',value = 'clothing')
+									| Clothing				
+							div(class = 'col-xs-4 col-md-4')
+								label
+									input(type = 'checkbox',name = 'interest',value = 'cooking')
+									| Cooking 
+							div(class = 'col-xs-4 col-md-4')
+								label
+									input(type = 'checkbox',name = 'interest',value = 'electronic')
+									| Electronic
+						div(class = 'row')
+							div(class = 'col-xs-4 col-md-4')
+								label
+									input(type = 'checkbox',name = 'interest',value = 'furniture')
+									| Furniture
+							div(class = 'col-xs-4 col-md-4')
+								label
+									input(type = 'checkbox',name = 'interest',value = 'food')
+									| Food								
+				<br />
+				<br />
+				button(class = 'btn btn-lg btn-primary btn-block', type = 'submit') Update
+
+
