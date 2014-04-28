@@ -1,21 +1,25 @@
 extends layout
 
 block content
-	form(role='form', class='form-horizontal', method='post')
+	div(class='row')
+		div(class= 'col-md-offset-3 col-xs-12 col-sm-12 col-md-5 well well-sm')
 			legend User Signup
-			div(class='form-group')
-				div(class= 'col-xs-12 col-md-3')
-					label(for='username') username
-					input(type='text',class='form-control',id='username',name= 'username',placeholder='Enter your username here')
-			div(class='form-group')
-				div(class= 'col-xs-12 col-md-3')
-					label(for='password') password
-					input(type='password',class='form-control',id='password',name='password')
-			div(class='form-group')
-				div(class= 'col-xs-12 col-md-3')
-					label(for='password') repeat your password
-					input(type='password',class='form-control',id='password-repeat',name='password-repeat')
-			div(class='form-actions')
-				button(type='submit',class='btn btn-primary') register
+			form(role='form', class='form-horizontal', method='post')
+				div(class = 'form-group')
+					div(class= 'col-xs-12 col-md-12')
+						label(for='username') username
+						input(type='text',class='form-control',id='username',name= 'username', required = 'required',placeholder='Enter your username here')
+				div(class='form-group')
+					div(class= 'col-xs-12 col-md-12')
+						label(for='password') password
+						input(type='password',class='form-control',id='password',name='password', required = 'required')
+				div(class='form-group')
+					div(class= 'col-xs-12 col-md-12')
+						label(for='password') repeat your password
+						input(type='password',class='form-control',id='password-repeat',name='password-repeat', required = 'required')
+				<br />
+				<br />
+				div(class= 'col-xs-12 col-md-6 col-md-offset-3')
+					button(class = 'btn btn-lg btn-primary btn-block', type = 'submit') register
 
 
