@@ -13,6 +13,12 @@ module.exports = function (app) {
             title:'Main Page'
         })
     })
+    app.get('/upload',function(req,res){
+    	res.render('upload',{
+    		title:'Upload'
+    	})
+
+    })
     app.post('/upload', function (req, res) {
 
         fs.readFile(req.files.image.path, function (err, data) {
@@ -30,6 +36,7 @@ module.exports = function (app) {
 
                 var newPath = path.dirname(require.main.filename) + "/uploads/fullsize/" + imageName;
                 fs.writeFile(newPath, data, function () {
+                	console.log(data);
                     res.redirect("/uploads/fullsize/" + imageName);
 
                 });
