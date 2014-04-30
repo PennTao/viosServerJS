@@ -144,6 +144,8 @@ module.exports = function (app) {
             title: req.session.user.name,
             email:req.session.user.email,
             gender:req.session.user.gender,
+            age:req.session.user.age,
+            zipcode:req.session.user.zipcode,
             like: req.session.user.like,
             dontcare: req.session.user.dontcare,
             dislike: req.session.user.dislike,
@@ -168,7 +170,8 @@ module.exports = function (app) {
             }
         }
         userinfo.gender = req.body.gender;
-        
+        userinfo.age = req.body.age;
+        userinfo.zipcode = req.body.zipcode;
         userinfo.interest = req.body.interest;
         console.log(userinfo.interest);
         userinfo.email = req.body['email'];// test different ways to access property
@@ -228,8 +231,12 @@ module.exports = function (app) {
             res.render('userpage', {
                 username: req.params.user,
                 gender: user.gender,
-                interest: user.interest,
-                email: user.email
+                age: user.age,
+                zipcode:user.zipcode,
+                email: user.email,
+                like:user.like,
+                dontcare:user.dontcare,
+                dislike:user.dislike,
             })
         })
 

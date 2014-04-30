@@ -1,7 +1,12 @@
 extends layout
 
 block content
-	p this is #{username}'s page
-	p gender: #{gender}
-	p interest: #{interest}
-	a(class = 'btn btn-primary', href = '/updateprofile') update
+	h2 This is #{username}'s page
+	p Gender: #{gender}
+	p Age: #{age}
+	p Zip Code: #{zipcode}
+	p Interest: #{interest}
+	p Likes: #{like}
+	p Don't care: #{dontcare}
+	p Dislikes: #{dislike}
+	a(class = 'btn btn-primary', href = '/updateprofile') Update
