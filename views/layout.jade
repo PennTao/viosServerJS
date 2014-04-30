@@ -6,6 +6,11 @@ html
 		link(rel='stylesheet', href='/stylesheets/bootstrap.css')
 		link(rel='stylesheet', href='/stylesheets/style.css')
 		link(rel='stylesheet', href='/stylesheets/dashboard.css')
+		script(src='/javascripts/jquery-2.1.0.js')
+		script(type = 'text/javascript').
+			for(var x in like){
+					alert(items);
+					}
 	body
 		div(class='navbar navbar-fixed-top navbar-inverse',role='navigation')
 			div(class='container')
@@ -51,7 +56,6 @@ html
 								i(class="fa fa-linkedin")
 							a(class="btn btn-social-icon btn-github",href='https://github.com/PennTao',target= '_blank')
 								i(class="fa fa-github")
-	script(src='/javascripts/jquery-2.1.0.js')
 	script(src='/javascripts/bootstrap.js')
 	script(src='/javascripts/global.js')
 	script(src='//platform.twitter.com/widgets.js', charset="utf-8")

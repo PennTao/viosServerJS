@@ -9,6 +9,10 @@ function User(user) {
     this.firstname = user.firstname;
     this.lastname = user.lastname;
     this.email = user.email;
+    this.age = user.age;
+    this.like = user.like;
+    this.dontcare = user.dontcare;
+    this.dislike = user.dislike
 
 };
 module.exports = User;
@@ -50,7 +54,7 @@ User.updateProfile = function updateProfile(username,userinfo,callback){
             console.log('update:' + username);
             console.log('update:' + userinfo.gender);
             console.log('update:' + userinfo.interest);
-            collection.update({name:username},{$set:{gender:userinfo.gender,interest:userinfo.interest}},function(err){
+            collection.update({name:username},{$set:{gender:userinfo.gender,interest:userinfo.interest,like:userinfo.like,dontcare:userinfo.dontcare,dislike:userinfo.dislike,email:userinfo.email}},function(err){
                 mongodb.close();
                 callback(err);
             })

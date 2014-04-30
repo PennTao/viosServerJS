@@ -7,6 +7,9 @@ var path = require('path');
 var util = require('util');
 var crypto = require('crypto');
 var User = require('../models/User.js');
+//For dev purpose only
+var items = [ 'Food', 'Pets', 'Cars', 'Sports', 'Gadgets', 'Baby', 'Travel', 'Cosmetic', 'Health', 'Home' ];
+
 module.exports = function (app) {
     app.get('/', function (req, res) {
         res.render('index', {
@@ -136,18 +139,40 @@ module.exports = function (app) {
     
     app.get('/updateprofile',checkLogin);
     app.get('/updateprofile',function(req,res){
+
         res.render('profile',{
             title: req.session.user.name,
+            email:req.session.user.email,
+            gender:req.session.user.gender,
+            like: req.session.user.like,
+            dontcare: req.session.user.dontcare,
+            dislike: req.session.user.dislike,
+            category: 'Interest',
+            items:items
         })
     })
 
     app.get('/updateprofile',checkLogin);
     app.post('/updateprofile',function(req,res){
         var userinfo = new Object;
+        userinfo.like = [];
+        userinfo.dontcare = [];
+        userinfo.dislike = [];
+        for(var x in items){
+            if(req.body[items[x]] == 'like'){
+                userinfo.like.push(items[x])
+            }else if(req.body[items[x]] == 'dontcare'){
+                userinfo.dontcare.push(items[x]);
+            }else if(req.body[items[x]] == 'dislike'){
+                userinfo.dislike.push(items[x]);
+            }
+        }
         userinfo.gender = req.body.gender;
         
         userinfo.interest = req.body.interest;
-        
+        console.log(userinfo.interest);
+        userinfo.email = req.body['email'];// test different ways to access property
+
         User.updateProfile(req.session.user.name,userinfo,function(err){
             req.session.user = null;
             res.redirect('/logout');
@@ -203,7 +228,8 @@ module.exports = function (app) {
             res.render('userpage', {
                 username: req.params.user,
                 gender: user.gender,
-                interest: user.interest 
+                interest: user.interest,
+                email: user.email
             })
         })
 
