@@ -2,11 +2,12 @@
 /*
  * GET home page.
  */
-var fs = require('fs');
+var fs = require('fs-extra');
 var path = require('path');
 var util = require('util');
 var crypto = require('crypto');
 var User = require('../models/User.js');
+var formidable = require('formidable');
 //For dev purpose only
 var items = [ 'Food', 'Pets', 'Cars', 'Sports', 'Gadgets', 'Baby', 'Travel', 'Cosmetic', 'Health', 'Home' ];
 
@@ -25,67 +26,85 @@ module.exports = function (app) {
 
     })
     app.post('/upload', function (req, res) {
-
-        fs.readFile(req.files.image.path, function (err, data) {
-	
-            var imageName = req.files.image.name
-	    console.log(req.files.image.path+imageName);
-            /// If there's an error
-            if (!imageName) {
-
-                console.log("There was an error")
-                res.redirect("/");
-                res.end();
-
-            } else {
-
-                var newPath = path.dirname(require.main.filename) + "/uploads/fullsize/" + imageName;
-                fs.writeFile(newPath, data, function () {
-                	console.log(data);
-                    res.redirect("/uploads/fullsize/" + imageName);
+        
+            var form = new formidable.IncomingForm();
+            //console.log(form);
+            //console.log(req._readableState);
+            //console.log(req.body);    
+            form.parse(req, function(err, fields, files) {
+                res.redirect('/u/'+req.session.user.name+'/userinfo');
+            
+            });
+            form.on('end', function(fields, files) {
+                 var temp_path = this.openedFiles[0].path;
+                 console.log(temp_path);      
+                 var file_name = 'f' + req.session.user.name + '.' + this.openedFiles[0].name.split('.').pop();       
+                 var new_location = path.dirname(require.main.filename) + "/uploads/face/";
+                 fs.copy(temp_path, new_location + file_name, function(err) {  
+                    if (err) {
+                         console.error(err);
+                    } else {
+                           console.log("success!")
+                    }
 
                 });
-            }
-        });
-    });
+                User.updateFace(req.session.user.name,"/uploads/face/" + file_name,function(err){
 
+
+                 });
+
+            });
+            
+
+
+        });
+
+    app.get('/uploads/face/:file',function(req,res){
+        var fileext = req.params.file.split('.').pop();
+        if(fileext == 'jpg' || fileext == 'png' ){
+            var img = fs.readFileSync(path.dirname(require.main.filename) + "/uploads/face/" + req.params.file);
+            var type = 'image/' + fileext;
+            res.writeHead(200, {'Content-Type': type });
+            res.end(img, 'binary');
+        }
+    })
     app.get('/uploads/fullsize/:file', function (req, res) {
-	var fileext = req.params.file.split('.').pop();
-	if(fileext == 'jpg' || fileext == 'png' ){
-		var img = fs.readFileSync(path.dirname(require.main.filename) + "/uploads/fullsize/" + req.params.file);
-		var type = 'image/' + fileext;
-		res.writeHead(200, {'Content-Type': type });
-		res.end(img, 'binary');
-	}else if(fileext == 'mp4'){
-		var filepath = path.dirname(require.main.filename) + "/uploads/fullsize/" + req.params.file;
-		var stat= fs.statSync(filepath);
-		var total = stat.size;
-		if (req.headers['range']) {
-		    var range = req.headers.range;
-		    var parts = range.replace(/bytes=/, "").split("-");
-		    var partialstart = parts[0];
-		    var partialend = parts[1];
-		 
-		    var start = parseInt(partialstart, 10);
-		    var end = partialend ? parseInt(partialend, 10) : total-1;
-		    var chunksize = (end-start)+1;
-		    console.log('RANGE: ' + start + ' - ' + end + ' = ' + chunksize);
-		 
-		    var file = fs.createReadStream(filepath, {start: start, end: end});
-		    res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'video/mp4' });
-		    file.pipe(res);
-		  } else {
-		    console.log('ALL: ' + total);
-		    res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'video/mp4' });
-		    fs.createReadStream(filepath).pipe(res);
-		 }
-		
-	}else if(fileext =='json' || fileext =='txt'){
-		var jsonfile = fs.readFileSync(path.dirname(require.main.filename) + "/uploads/fullsize/" + req.params.file);
-		res.writeHead(200, {'Content-Type': 'text' });
-		res.end(jsonfile, 'binary');
-			
-	}
+    	var fileext = req.params.file.split('.').pop();
+    	if(fileext == 'jpg' || fileext == 'png' ){
+    		var img = fs.readFileSync(path.dirname(require.main.filename) + "/uploads/fullsize/" + req.params.file);
+    		var type = 'image/' + fileext;
+    		res.writeHead(200, {'Content-Type': type });
+    		res.end(img, 'binary');
+    	}else if(fileext == 'mp4'){
+    		var filepath = path.dirname(require.main.filename) + "/uploads/fullsize/" + req.params.file;
+    		var stat= fs.statSync(filepath);
+    		var total = stat.size;
+    		if (req.headers['range']) {
+    		    var range = req.headers.range;
+    		    var parts = range.replace(/bytes=/, "").split("-");
+    		    var partialstart = parts[0];
+    		    var partialend = parts[1];
+    		 
+    		    var start = parseInt(partialstart, 10);
+    		    var end = partialend ? parseInt(partialend, 10) : total-1;
+    		    var chunksize = (end-start)+1;
+    		    console.log('RANGE: ' + start + ' - ' + end + ' = ' + chunksize);
+    		 
+    		    var file = fs.createReadStream(filepath, {start: start, end: end});
+    		    res.writeHead(206, { 'Content-Range': 'bytes ' + start + '-' + end + '/' + total, 'Accept-Ranges': 'bytes', 'Content-Length': chunksize, 'Content-Type': 'video/mp4' });
+    		    file.pipe(res);
+    		  } else {
+    		    console.log('ALL: ' + total);
+    		    res.writeHead(200, { 'Content-Length': total, 'Content-Type': 'video/mp4' });
+    		    fs.createReadStream(filepath).pipe(res);
+    		 }
+    		
+    	}else if(fileext =='json' || fileext =='txt'){
+    		var jsonfile = fs.readFileSync(path.dirname(require.main.filename) + "/uploads/fullsize/" + req.params.file);
+    		res.writeHead(200, {'Content-Type': 'text' });
+    		res.end(jsonfile, 'binary');
+    			
+    	}
 	
 
     });
@@ -177,8 +196,7 @@ module.exports = function (app) {
         userinfo.email = req.body['email'];// test different ways to access property
 
         User.updateProfile(req.session.user.name,userinfo,function(err){
-            req.session.user = null;
-            res.redirect('/logout');
+            res.redirect('/u/' + req.session.user.name + '/userinfo');
         });
 
 
@@ -237,6 +255,7 @@ module.exports = function (app) {
                 like:user.like,
                 dontcare:user.dontcare,
                 dislike:user.dislike,
+                faceurl:user.faceurl
             })
         })
 

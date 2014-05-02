@@ -1,8 +1,5 @@
-extends layout
+extends uploadlayout
 
 block content
-  h1= title
-  p Welcome to #{title}
-  form(method='post',action='/upload',enctype='multipart/form-data')
-    input(type='file',name='image')
-    input(type='submit')
+  h1 Upload new profile image
+

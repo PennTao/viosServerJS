@@ -10,12 +10,18 @@ a {
 	color: #669;
 	text-decoration: none;
 }
-label {
+label{
     display: block;
     padding-left: 15px;
     text-indent: -15px;
 }
-input {
+label[type="item"] {
+    display: block;
+    top: 5px;
+    padding-left: 15px;
+    text-indent: -15px;
+}
+input[type="radio"] {
     width: 13px;
     height: 13px;
     padding: 0;
@@ -24,4 +30,11 @@ input {
     position: relative;
     top: -1px;
     *overflow: hidden;
+}
+img{
+    display: block;
+    margin: auto;
+}
+a[type = "center"]{
+    text-align: center;
 }

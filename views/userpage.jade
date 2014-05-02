@@ -1,12 +1,47 @@
 extends layout
 
 block content
-	h2 This is #{username}'s page
-	p Gender: #{gender}
-	p Age: #{age}
-	p Zip Code: #{zipcode}
-	p Email: #{email}
-	p Likes: #{like}
-	p Don't care: #{dontcare}
-	p Dislikes: #{dislike}
-	a(class = 'btn btn-primary', href = '/updateprofile') Update
+	h3
+		div(class= 'row')
+			div(class= 'col-xs-offset-1 col-xs-12 col-sm-3 col-md-2 well well-sm')
+				img(src = faceurl, height = '128', width = '128')
+				div(class='col-xs-offset-3')
+					a(href='/upload',class='btn btn-primary btn-sm') New Photo
+			div(class= 'col-xs-offset-1 col-xs-12 col-sm-6 col-md-6 well well-sm')
+				div(class = 'col-xs-6 col-md-6')
+					label(class = 'label label-danger col-xs-12 col-md-12') username 
+				div(class = 'col-xs-6 col-md-6')
+					p #{username}
+				div(class = 'col-xs-6 col-md-6')
+					label(class = 'label label-success col-xs-12 col-md-12') Gender 
+				div(class = 'col-xs-6 col-md-6')
+					p #{gender}
+				div(class = 'col-xs-6 col-md-6')
+					label(class = 'label label-info col-xs-12 col-md-12') Age
+				div(class = 'col-xs-6 col-md-6')
+					p #{age}
+				div(class = 'col-xs-6 col-md-6')
+					label(class = 'label label-warning col-xs-12 col-md-12') Zip Code
+				div(class = 'col-xs-6 col-md-6')
+					p #{zipcode}
+		div(class='row')
+			div(class= 'col-xs-offset-1 col-xs-12 col-sm-10 col-md-9 well well-sm')
+				div(class = 'row')
+					div(class = 'col-xs-12 col-md-12')
+						div(class = 'col-xs-3 col-md-2')
+							label(class = 'label label-success col-xs-12 col-md-12') Likes
+						div(class = 'col-xs-9 col-md-9')
+							p #{like}
+						div(class = 'col-xs-3 col-md-2')
+							label(class = 'label label-warning col-xs-12 col-md-12') Don't care
+						div(class = 'col-xs-9 col-md-9')
+							p #{dontcare}
+						div(class = 'col-xs-3 col-md-2')
+							label(class = 'label label-danger col-xs-12 col-md-12') Dislikes 
+						div(class = 'col-xs-9 col-md-9')
+							p #{dislike}
+
+			
+		div(class = 'row')
+			div(class= 'col-xs-offset-5 col-md-offset-3')
+				a(class = 'btn btn-primary btn-lg', href = '/updateprofile') Update

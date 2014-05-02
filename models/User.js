@@ -13,7 +13,8 @@ function User(user) {
     this.zipcode = user.zipcode;
     this.like = user.like;
     this.dontcare = user.dontcare;
-    this.dislike = user.dislike
+    this.dislike = user.dislike;
+    this.faceurl = user.faceurl;
 
 };
 module.exports = User;
@@ -61,11 +62,27 @@ User.updateProfile = function updateProfile(username,userinfo,callback){
             })
         })
     })
-
-
-
 }
 
+User.updateFace = function updateFace(username,location,callback){
+    mongodb.open(function(err,db){
+        if(err){
+            return callback(err);
+        }
+        db.collection('users',function(err,collection){
+            if(err){
+                mongodb.close();
+                return callback(err);
+            }
+            collection.update({name:username},{$set:{faceurl:location}},function(err){
+                mongodb.close();
+                callback(err);
+            })
+
+        })
+    })
+
+}
 User.get = function get(username, callback) {
     mongodb.open(function (err, db) {
         if (err) {
