@@ -12,25 +12,24 @@ var formidable = require('formidable');
 var items = [ 'Food', 'Pets', 'Cars', 'Sports', 'Gadgets', 'Baby', 'Travel', 'Cosmetic', 'Health', 'Home' ];
 
 module.exports = function (app) {
+    //Home Page
     app.get('/', function (req, res) {
         res.render('index', {
             title:'Main Page'
         })
     })
 
-
+    //Profile Image upload page
     app.get('/upload',function(req,res){
     	res.render('upload',{
     		title:'Upload'
     	})
 
     })
+    // Handle POST new profile image request
     app.post('/upload', function (req, res) {
         
             var form = new formidable.IncomingForm();
-            //console.log(form);
-            //console.log(req._readableState);
-            //console.log(req.body);    
             form.parse(req, function(err, fields, files) {
                 res.redirect('/u/'+req.session.user.name+'/userinfo');
             
@@ -40,6 +39,7 @@ module.exports = function (app) {
                  console.log(temp_path);      
                  var file_name = 'f' + req.session.user.name + '.' + this.openedFiles[0].name.split('.').pop();       
                  var new_location = path.dirname(require.main.filename) + "/uploads/face/";
+                 //Copy received image from tmp folder to dedicated folder
                  fs.copy(temp_path, new_location + file_name, function(err) {  
                     if (err) {
                          console.error(err);
@@ -48,17 +48,19 @@ module.exports = function (app) {
                     }
 
                 });
+                // Update user profile image url info in database
                 User.updateFace(req.session.user.name,"/uploads/face/" + file_name,function(err){
 
 
-                 });
+                });
 
             });
             
 
 
         });
-
+    
+    // GET user profile image
     app.get('/uploads/face/:file',function(req,res){
         var fileext = req.params.file.split('.').pop();
         if(fileext == 'jpg' || fileext == 'png' ){
@@ -68,6 +70,7 @@ module.exports = function (app) {
             res.end(img, 'binary');
         }
     })
+    // GET contents in /uploads/fullsize folder, JSON, JPG, MP4
     app.get('/uploads/fullsize/:file', function (req, res) {
     	var fileext = req.params.file.split('.').pop();
     	if(fileext == 'jpg' || fileext == 'png' ){
@@ -105,17 +108,9 @@ module.exports = function (app) {
     		res.end(jsonfile, 'binary');
     			
     	}
-	
-
     });
 
-    app.get('/uploads/thumbs/:file', function (req, res) {
-        var img = fs.readFileSync(path.dirname(require.main.filename) + "/uploads/thumbs/" + req.params.file);
-	res.writeHead(200, {'Content-Type': 'image' });
-	res.end(img, 'binary');
-
-    });
-
+    // Register page
     app.get('/reg', checkNLogin);
     app.get('/reg', function (req, res) {
         res.render('reg', {
@@ -123,6 +118,7 @@ module.exports = function (app) {
         });
     });
 
+    // Handle register request
     app.get('/reg', checkNLogin);
     app.post('/reg', function (req, res) {
         if (req.body['password-repeat'] != req.body['password']) {
@@ -156,9 +152,10 @@ module.exports = function (app) {
         });
     });
     
+    // Update user profile page
     app.get('/updateprofile',checkLogin);
     app.get('/updateprofile',function(req,res){
-
+        // Show user current info and preference
         res.render('profile',{
             title: req.session.user.name,
             email:req.session.user.email,
@@ -170,9 +167,10 @@ module.exports = function (app) {
             dislike: req.session.user.dislike,
             category: 'Interest',
             items:items
-        })
-    })
+        });
+    });
 
+    // Handle update profile request
     app.get('/updateprofile',checkLogin);
     app.post('/updateprofile',function(req,res){
         var userinfo = new Object;
@@ -203,7 +201,9 @@ module.exports = function (app) {
 
 
 
-    })
+    });
+
+    // User login
 	app.get('/login', checkNLogin);
     app.get('/login', function (req, res) {
         res.render('login', {
@@ -232,6 +232,7 @@ module.exports = function (app) {
         });
     });
 
+    // User logout
 	app.get('/logout', checkLogin);
     app.get('/logout', function (req, res) {
         req.session.user = null;
@@ -239,6 +240,7 @@ module.exports = function (app) {
         res.redirect('/');
     });
 
+    // Show user info page
     app.get('/u/:user/userinfo',function(req,res){
         User.get(req.params.user,function(err,user){
             if(!user){
@@ -256,12 +258,14 @@ module.exports = function (app) {
                 dontcare:user.dontcare,
                 dislike:user.dislike,
                 faceurl:user.faceurl
-            })
-        })
+            });
+        });
 
 
 
-    })
+    });
+
+    // Check if user is logged in
     function checkLogin(req, res, next) {
 	    if (!req.session.user) {
 	        req.flash('error', 'Please log in first');
@@ -269,6 +273,8 @@ module.exports = function (app) {
 	    }
 	    next();
 	};
+
+    // Check if user is not logged in
 	function checkNLogin(req, res, next) {
 	    if (req.session.user) {
 	        req.flash('error', 'logged in already');
