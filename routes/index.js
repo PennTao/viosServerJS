@@ -156,17 +156,20 @@ module.exports = function (app) {
     app.get('/updateprofile',checkLogin);
     app.get('/updateprofile',function(req,res){
         // Show user current info and preference
-        res.render('profile',{
-            title: req.session.user.name,
-            email:req.session.user.email,
-            gender:req.session.user.gender,
-            age:req.session.user.age,
-            zipcode:req.session.user.zipcode,
-            like: req.session.user.like,
-            dontcare: req.session.user.dontcare,
-            dislike: req.session.user.dislike,
-            category: 'Interest',
-            items:items
+        User.get(req.session.user.name, function(err,user){
+            console.log(req.session.user);
+            res.render('profile',{
+                title: user.name,
+                email:user.email,
+                gender: user.gender,
+                age:user.age,
+                zipcode:user.zipcode,
+                like: user.like,
+                dontcare: user.dontcare,
+                dislike: user.dislike,
+                category: 'Interest',
+                items:items
+            });
         });
     });
 
@@ -190,7 +193,7 @@ module.exports = function (app) {
         userinfo.age = req.body.age;
         userinfo.zipcode = req.body.zipcode;
         userinfo.interest = req.body.interest;
-        console.log(userinfo.interest);
+       // console.log(userinfo.interest);
         userinfo.email = req.body['email'];// test different ways to access property
 
         User.updateProfile(req.session.user.name,userinfo,function(err){
@@ -226,7 +229,7 @@ module.exports = function (app) {
                 return res.redirect('/login');
             }
             req.session.user = user;
-            console.log(req.session.user);
+          //  console.log(req.session.user);
             req.flash('success', 'Log in successfully');
             res.redirect('/u/' + req.session.user.name + '/userinfo');
         });
