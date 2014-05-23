@@ -1,0 +1,11 @@
+VIOS Server, built by using NodeJS
+
+Current function:
+1. Upload files(images) to server
+2. GET image from server
+
+To try it on your machine
+1. Git clone
+2. cd into project's root
+3. mkdir uploads
+4. cd into uploads and mkdir fullsize
